@@ -11,7 +11,12 @@ from io import BytesIO
 import os
 import hashlib
 import pyodbc
-import pandas as pd
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ModuleNotFoundError:
+    pd = None
+    PANDAS_AVAILABLE = False
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
