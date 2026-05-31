@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Student Registration - OSHAQUE CloudFees ERP">
+    <meta name="theme-color" content="#5b6cff">
+    <title>Register - OSHAQUE CloudFees ERP</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-theme="{{ settings.get('theme', 'light') }}" data-brand="{{ settings.get('brand', 'gold') }}">
+    <a href="#auth-main" class="skip-link">Skip to main content</a>
+    <div id="auth-main" class="register-container page-transition">
+        <div class="register-box">
+            <div class="auth-controls">
+                <button id="auth-theme-toggle" class="auth-mode-toggle" type="button">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button id="auth-brand-toggle" class="auth-brand-toggle" type="button" title="Toggle brand">
+                    <i class="fas fa-palette"></i> Brand
+                </button>
+            </div>
+
+            <div class="register-header">
+                <div class="register-icon" aria-hidden="true">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="brand-mark auth-brand-mark" aria-hidden="true"><i class="fas fa-gem"></i></div>
+                <div>
+                    <h2>Student Registration</h2>
+                    <p>OSHAQUE CloudFees ERP System</p>
+                    <div class="brand-pill"><i class="fas fa-star"></i> Secure Pro Signup</div>
+                </div>
+            </div>
+
+            <div class="auth-hero">
+                <div>
+                    <h3>Join the premium college ERP</h3>
+                    <p>Register securely and get instant access to fee management, student tracking, and reports.</p>
+                </div>
+                <div class="auth-hero-pill"><i class="fas fa-shield-alt"></i> Secure Enrollment</div>
+            </div>
+
+            {% if error %}
+            <div class="alert-error">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            {% if success %}
+            <div class="alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required value="{{ form_data.get('name', '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter email address" required value="{{ form_data.get('email', '') }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role"><i class="fas fa-user-tag"></i> Register As</label>
+                        <select id="role" name="role" required>
+                            {% set selected_role = form_data.get('role', 'student') %}
+                            <option value="student" {% if selected_role == 'student' %}selected{% endif %}>Student</option>
+                            <option value="parent" {% if selected_role == 'parent' %}selected{% endif %}>Parent</option>
+                            <option value="teacher" {% if selected_role == 'teacher' %}selected{% endif %}>Teacher</option>
+                            <option value="accountant" {% if selected_role == 'accountant' %}selected{% endif %}>Accountant</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required value="{{ form_data.get('phone', '') }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parent_name"><i class="fas fa-user-friends"></i> Parent Name</label>
+                        <input type="text" id="parent_name" name="parent_name" placeholder="Parent/Guardian name" required value="{{ form_data.get('parent_name', '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="parent_phone"><i class="fas fa-phone-alt"></i> Parent Phone</label>
+                        <input type="tel" id="parent_phone" name="parent_phone" placeholder="Parent contact number" required value="{{ form_data.get('parent_phone', '') }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course_id"><i class="fas fa-book"></i> Course</label>
+                        <select id="course_id" name="course_id" required>
+                            <option value="">Select Course</option>
+                            {% for course in courses %}
+                            <option value="{{ course[0] }}" {% if course[0]|string == form_data.get('course_id', '') %}selected{% endif %}>{{ course[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <textarea id="address" name="address" rows="2" placeholder="Enter your address">{{ form_data.get('address', '') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username"><i class="fas fa-user-circle"></i> Username</label>
+                        <input type="text" id="username" name="username" placeholder="Choose a username" required value="{{ form_data.get('username', '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-key"></i> Password</label>
+                        <div class="password-wrap">
+                            <input type="password" id="password" name="password" placeholder="Choose a password" required aria-label="Password">
+                            <button type="button" class="password-toggle" aria-label="Toggle password visibility" title="Show/Hide password" onclick="togglePassword()">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="confirm_password"><i class="fas fa-key"></i> Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-register">
+                    <i class="fas fa-paper-plane"></i> Submit Registration
+                </button>
+            </form>
+
+            <div class="register-footer">
+                <p><a href="/login"><i class="fas fa-sign-in-alt"></i> Already have an account? Login here</a></p>
+            </div>
+            <div class="auth-box-footer">
+                <span>OSHAQUE CloudFees ERP • Secure student registration with dashboard-ready analytics.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.querySelector('.password-toggle i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.getElementById('auth-theme-toggle');
+            if (!button) return;
+            const updateLabel = () => {
+                const isDark = document.body.getAttribute('data-theme') === 'dark';
+                button.innerHTML = `<i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i> ${isDark ? 'Light Mode' : 'Dark Mode'}`;
+            };
+            button.addEventListener('click', () => {
+                if (typeof toggleTheme === 'function') {
+                    toggleTheme();
+                } else {
+                    const nextTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    document.body.setAttribute('data-theme', nextTheme);
+                    localStorage.setItem('theme', nextTheme);
+                }
+                updateLabel();
+            });
+            updateLabel();
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='ui.js') }}"></script>
+</body>
+</html>
+

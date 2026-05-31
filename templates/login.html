@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="OSHAQUE CloudFees - College Fees Management System">
+    <meta name="theme-color" content="#5b6cff">
+    <title>Login - OSHAQUE CloudFees ERP</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-theme="{{ settings.get('theme', 'light') }}" data-brand="{{ settings.get('brand', 'gold') }}">
+    <a href="#auth-main" class="skip-link">Skip to main content</a>
+    <div id="auth-main" class="login-container page-transition">
+        <div class="login-box">
+            <div class="auth-controls">
+                <button id="auth-theme-toggle" class="auth-mode-toggle" type="button">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button id="auth-brand-toggle" class="auth-brand-toggle" type="button" title="Toggle brand">
+                    <i class="fas fa-palette"></i> Brand
+                </button>
+            </div>
+            <div class="login-header">
+                <div class="login-icon" aria-hidden="true">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <div class="brand-mark auth-brand-mark" aria-hidden="true"><i class="fas fa-gem"></i></div>
+                <div>
+                    <h2>OSHAQUE <span class="brand-accent">CloudFees</span></h2>
+                    <p><i class="fas fa-university"></i> Complete College Fees Management ERP</p>
+                    <div class="brand-pill"><i class="fas fa-rocket"></i> Pro Dashboard</div>
+                </div>
+            </div>
+
+            <div class="auth-hero">
+                <div>
+                    <h3>Secure access to fee operations</h3>
+                    <p>Sign in and manage student fees, payments, receipts, and analytics through one powerful ERP.</p>
+                </div>
+                <div class="auth-hero-pill"><i class="fas fa-crown"></i> Premium Access</div>
+            </div>
+
+            {% if error %}
+            <div class="alert-error">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="login-form">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="username" value="{{ username|default('') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="password-toggle" aria-label="Toggle password visibility" title="Show/Hide password" onclick="togglePassword()">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-right-to-bracket"></i> Sign In
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p class="demo-text">
+                    <i class="fas fa-shield-halved"></i>
+                    <strong>Demo Credentials:</strong><br>
+                    Username: <code>admin</code> | Password: <code>admin123</code>
+                </p>
+                <p class="register-link">
+                    <a href="/register"><i class="fas fa-user-plus"></i> New Student? Register Here</a>
+                </p>
+            </div>
+            <div class="auth-box-footer">
+                <span>OSHAQUE CloudFees ERP • Trusted fee automation with a premium interface.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.querySelector('.password-toggle i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // update label for auth theme toggle and bind to shared theme toggle
+            const button = document.getElementById('auth-theme-toggle');
+            if (!button) return;
+            const updateLabel = () => {
+                const isDark = document.body.getAttribute('data-theme') === 'dark';
+                button.innerHTML = `<i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i> ${isDark ? 'Light Mode' : 'Dark Mode'}`;
+            };
+            button.addEventListener('click', () => {
+                if (typeof toggleTheme === 'function') {
+                    toggleTheme();
+                } else {
+                    // fallback if ui.js not loaded
+                    const nextTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    document.body.setAttribute('data-theme', nextTheme);
+                    localStorage.setItem('theme', nextTheme);
+                }
+                updateLabel();
+            });
+            updateLabel();
+        });
+    </script>
+    <script src="{{ url_for('static', filename='ui.js') }}"></script>
+</body>
+</html>

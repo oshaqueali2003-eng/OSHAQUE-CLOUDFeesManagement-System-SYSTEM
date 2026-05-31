@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="OSHAQUE CloudFees - Complete College Fees Management ERP">
+    <meta name="theme-color" content="#5b6cff">
+    <title>{{ session.username }} - OSHAQUE CloudFees ERP</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-theme="{{ settings.get('theme', 'light') }}" data-brand="{{ settings.get('brand', 'gold') }}">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="app">
+        <!-- ==================== SIDEBAR ==================== -->
+            <div class="sidebar">
+                <div class="sidebar-brand">
+                    <!-- Unified Cloud logo (no external images) -->
+                    <div class="sidebar-logo" aria-hidden="true">
+                        <svg class="cloud-logo" viewBox="0 0 64 64" role="img" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#FFD700"/>
+                                    <stop offset="1" stop-color="#D4AF37"/>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#g)" d="M20.6 39.2c-6.3 0-11.4-4.9-11.4-11 0-5.1 3.7-9.6 8.9-10.7 1.8-7.6 8.7-13 16.7-13 8.8 0 16.2 6.3 17.4 14.7 5.4 1.2 9.3 6.1 9.3 11.6 0 6.4-5.2 11.3-11.7 11.3H20.6z"/>
+                            <path fill="#0A192F" opacity="0.20" d="M20.6 39.2c-6.3 0-11.4-4.9-11.4-11 0-5.1 3.7-9.6 8.9-10.7 1.8-7.6 8.7-13 16.7-13 8.8 0 16.2 6.3 17.4 14.7 5.4 1.2 9.3 6.1 9.3 11.6 0 6.4-5.2 11.3-11.7 11.3H20.6z"/>
+                            <path fill="#0A192F" opacity="0.10" d="M28.5 43.8c-3.2 0-5.8-2.4-5.8-5.4 0-2.5 1.7-4.6 4.1-5.1 0.8-3.4 4-5.9 7.6-5.9 4 0 7.2 2.8 7.7 6.6 2.4 0.5 4.1 2.7 4.1 5.3 0 2.9-2.5 5.2-5.5 5.2H28.5z"/>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h2 class="sidebar-brand-title">OSHAQUE <span>CloudFees</span></h2>
+                        <span class="sidebar-brand-sub">Secure Cloud Fee ERP</span>
+                        <div class="sidebar-pill"><i class="fas fa-shield-alt"></i><span style="margin-left:6px;">Pro Edition</span></div>
+                    </div>
+                </div>
+
+
+
+            <nav class="sidebar-nav sidebar-menu" role="navigation" aria-label="Main navigation">
+                {% for item in sidebar_links %}
+                <a href="{{ item.url }}" class="sidebar-link {% if module == item.module %}active{% endif %}" {% if module == item.module %}aria-current="page"{% endif %}>
+                    <i class="{{ item.icon }}"></i>
+                    <span>{{ item.label }}</span>
+                </a>
+                {% endfor %}
+            </nav>
+
+            <div class="sidebar-actions">
+                <button id="theme-toggle" class="sidebar-theme-btn" type="button">
+                    <i class="fas fa-moon"></i>
+                    <span>Theme</span>
+                </button>
+                <button id="brand-toggle" class="sidebar-brand-btn" type="button" title="Toggle brand">
+                    <i class="fas fa-palette"></i> Brand
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                <span class="sidebar-user"><i class="fas fa-circle-user"></i> {{ session.username }}
+                    <span class="role-badge">{{ role|capitalize }}</span>
+                </span>
+            </div>
+        </div>
+
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- ==================== MAIN CONTENT ==================== -->
+        <div id="main-content" class="main-content" role="main">
+            {# Flash messages (used by approvals approve/reject) #}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages" role="status" aria-live="polite" style="margin: 14px 0;">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="module-intro">
+                <div class="module-logo"><i class="fas fa-cloud"></i></div>
+                <div>
+                    <div class="brand-pill"><i class="fas fa-shield-alt"></i> OSHAQUE CloudFees</div>
+                    <p class="module-tagline">Pro-grade ERP interface with advanced fee collection, reporting, and analytics across every module.</p>
+                </div>
+                <div class="module-badge">
+                    <span class="badge badge-pro"><i class="fas fa-bolt"></i> Pro Interface</span>
+                    <span class="badge badge-advanced"><i class="fas fa-star"></i> Advanced UI</span>
+                    <span class="badge badge-new"><i class="fas fa-award"></i> Built for Performance</span>
+                </div>
+            </div>
+
+
+
+            <!-- ========== APPROVALS MODULE (Admin Only) ========== -->
+            {% if module == 'approvals' and role in ['super_admin','admin'] %}
+            <div class="approvals-view">
+                <div class="page-header">
+                    <h1><i class="fas fa-user-shield"></i> Pending Registration Approvals</h1>
+                </div>
+
+                    <div class="data-table">
+                    <table>
+                        <thead>
+<tr>
+                                <th>Name</th><th>Email</th><th>Phone</th><th>Parent</th><th>Course</th><th>Role</th><th>Requested At</th><th>Status</th><th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in pending_requests %}
+                            <tr>
+                                <td>{{ r[1] }}</td>
+                                <td>{{ r[2] }}</td>
+                                <td>{{ r[3] }}</td>
+                                <td>{{ r[4] }}</td>
+<td>{{ r[6] if r|length > 6 else 'N/A' }}</td>
+<td>{{ r[9] if r|length > 9 else 'student' }}</td>
+                                <td>{{ r[10] if r|length > 10 else '' }}</td>
+                                <td><span class="badge badge-info">{{ r[11] if r|length > 11 else 'Pending' }}</span></td>
+                                <td>
+                                    <a href="/approve_request/{{ r[0] }}" class="btn-sm btn-primary" role="button"><i class="fas fa-check"></i> Approve</a>
+                                    <a href="/reject_request/{{ r[0] }}" class="btn-sm btn-danger" role="button" onclick="return confirm('Reject this request?')"><i class="fas fa-xmark"></i> Reject</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="8">No pending approvals</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ========== DASHBOARD MODULE ========== -->
+            {% if module == 'dashboard' %}
+            <div class="dashboard-view">
+                <div class="page-header">
+                    <h1><i class="fas fa-chart-line"></i> Financial Dashboard</h1>
+                    <p>Welcome back, <strong>{{ session.username }}</strong>! 👋</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                        <div class="stat-content">
+                            <h3>Today's Collection</h3>
+<p class="stat-value text-success">Rs. {{ "%.2f"|format(today_collection) }}</p>
+                            <small>{{ today_count }} transactions</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="stat-content">
+                            <h3>Monthly Collection</h3>
+<p class="stat-value text-primary">Rs. {{ "%.2f"|format(monthly_collection) }}</p>
+                            <small>This month</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-content">
+                            <h3>Total Students</h3>
+                            <p class="stat-value">{{ total_students }}</p>
+                            <small>Active enrollments</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-content">
+                            <h3>Total Collected</h3>
+<p class="stat-value text-success">Rs. {{ "%.2f"|format(total_collected) }}</p>
+                            <small>All time</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-content">
+                            <h3>Pending Fees</h3>
+<p class="stat-value text-danger">Rs. {{ "%.2f"|format(pending_fees) }}</p>
+                            <small>{{ defaulters_count }} defaulters</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Payments -->
+                <div class="section-title"><i class="fas fa-history"></i> Recent Payments</div>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr><th>Student Name</th><th>Amount</th><th>Date</th><th>Mode</th><th>Receipt</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in recent_payments %}
+                            <tr>
+                                <td>{{ payment[1] }}</td>
+<td>Rs. {{ "%.2f"|format(payment[2]) }}</td>
+                                <td>{{ payment[3] }}</td>
+                                <td>{{ payment[4] }}</td>
+                                <td><a href="/receipt/{{ payment[0] }}" class="btn-sm btn-primary">View</a></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5">No payments yet</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ========== STUDENTS MODULE ========== -->
+            {% if module == 'students' %}
+            <div class="students-view">
+                <div class="page-header">
+                    <h1><i class="fas fa-users"></i> Student Management</h1>
+                    <button class="btn-primary" onclick="openModal('addStudentModal')"><i class="fas fa-plus"></i> Add Student</button>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <form method="GET" style="display: flex; gap: 10px; width: 100%;">
+                        <input type="text" name="search" placeholder="Search by name, ID or roll number..." value="{{ search }}">
+                        <select name="course_id">
+                            <option value="">All Courses</option>
+                            {% for course in courses %}
+                            <option value="{{ course[0] }}" {% if selected_course == course[0]|string %}selected{% endif %}>{{ course[1] }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="status">
+                            <option value="">All Status</option>
+                            <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Active</option>
+                            <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>Inactive</option>
+                        </select>
+                        <button type="submit" class="btn-primary"><i class="fas fa-search"></i> Search</button>
+                    </form>
+                </div>
+
+                <!-- Students Table -->
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr><th>Photo</th><th>Student ID</th><th>Name</th><th>Roll No</th><th>Course</th><th>Phone</th><th>Parent Phone</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td class="product-thumb">
+                                    {% if student[11] %}
+                                        <img src="{{ student[11] }}" alt="{{ student[3] or 'Student photo' }}" width="40" height="40" style="border-radius: 50%; object-fit: cover;">
+                                    {% else %}
+                                        <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                                    {% endif %}
+                                </td>
+                                <td>{{ student[1] }}</td>
+                                <td>{{ student[3] }}</td>
+                                <td>{{ student[2] }}</td>
+                                <td>{{ student[8] }}</td>
+                                <td>{{ student[5] }}</td>
+                                <td>{{ student[7] }}</td>
+                                <td>{% if student[10] %}<span class="badge-success">Active</span>{% else %}<span class="badge-danger">Inactive</span>{% endif %}</td>
+                                <td>
+                                    <a href="/view_student/{{ student[1] }}" class="btn-sm btn-primary"><i class="fas fa-eye"></i></a>
+                                    <button class="btn-sm btn-warning" onclick="editStudent('{{ student[1] }}')"><i class="fas fa-edit"></i></button>
+
+                                    <button class="btn-sm btn-danger" onclick="confirmDelete('/delete_student/{{ student[1] }}', 'Delete this student?')"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="9">No students found</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Student Modal -->
+            <div id="addStudentModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header"><h3>Add New Student</h3><button class="close-modal" aria-label="Close dialog" title="Close" onclick="closeModal()">&times;</button></div>
+                    <form method="POST" action="/add_student" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <div class="form-group"><label>Full Name</label><input type="text" name="name" required></div>
+                            <div class="form-group"><label>Email</label><input type="email" name="email"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Phone</label><input type="text" name="phone"></div>
+                            <div class="form-group"><label>Roll No</label><input type="text" name="roll_no"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Parent Name</label><input type="text" name="parent_name"></div>
+                            <div class="form-group"><label>Parent Phone</label><input type="text" name="parent_phone"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Parent Email</label><input type="email" name="parent_email"></div>
+                            <div class="form-group"><label>Course</label><select name="course_id" required>
+                                <option value="">Select Course</option>{% for course in courses %}<option value="{{ course[0] }}">{{ course[1] }}</option>{% endfor %}
+                            </select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Semester</label><select name="semester_id" required>
+                                <option value="">Select Semester</option>{% for semester in semesters %}<option value="{{ semester[0] }}">{{ semester[1] }}</option>{% endfor %}
+                            </select></div>
+                        </div>
+                        <div class="form-group"><label>Address</label><textarea name="address" rows="2"></textarea></div>
+                        <div class="form-group"><label>Photo</label><input type="file" name="photo" accept="image/*"></div>
+                        <button type="submit" class="btn-primary">Add Student</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="editStudentModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header"><h3>Edit Student</h3><button class="close-modal" aria-label="Close dialog" title="Close" onclick="closeModal()">&times;</button></div>
+                    <form id="editStudentForm" method="POST" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <div class="form-group"><label>Full Name</label><input type="text" name="name" id="editStudentName" required></div>
+                            <div class="form-group"><label>Email</label><input type="email" name="email" id="editStudentEmail"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Phone</label><input type="text" name="phone" id="editStudentPhone"></div>
+                            <div class="form-group"><label>Roll No</label><input type="text" name="roll_no" id="editStudentRoll"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Parent Name</label><input type="text" name="parent_name" id="editStudentParentName"></div>
+                            <div class="form-group"><label>Parent Phone</label><input type="text" name="parent_phone" id="editStudentParentPhone"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Parent Email</label><input type="email" name="parent_email" id="editStudentParentEmail"></div>
+                            <div class="form-group"><label>Course</label><select name="course_id" required id="editStudentCourse">
+                                <option value="">Select Course</option>{% for course in courses %}<option value="{{ course[0] }}">{{ course[1] }}</option>{% endfor %}
+                            </select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Semester</label><select name="semester_id" required id="editStudentSemester">
+                                <option value="">Select Semester</option>{% for semester in semesters %}<option value="{{ semester[0] }}">{{ semester[1] }}</option>{% endfor %}
+                            </select></div>
+                        </div>
+                        <div class="form-group"><label>Address</label><textarea name="address" id="editStudentAddress" rows="2"></textarea></div>
+                        <div class="form-group"><label>Photo</label><input type="file" name="photo" accept="image/*"></div>
+                        <button type="submit" class="btn-primary">Update Student</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ========== FEE STRUCTURE MODULE ========== -->
+            {% if module == 'fee_structure' %}
+            <div class="fee-structure-view">
+                <div class="page-header">
+                    <h1><i class="fas fa-file-invoice-dollar"></i> Fee Structure</h1>
+                    <button class="btn-primary" onclick="openModal('addFeeModal')"><i class="fas fa-plus"></i> Add Fee</button>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead><tr><th>Course</th><th>Semester</th><th>Fee Head</th><th>Amount</th><th>Due Date</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {% for fs in fee_structures %}
+                            <tr>
+                                <td>{{ fs[1] }}</td>
+                                <td>{{ fs[2] }}</td>
+                                <td>{{ fs[3] }}</td>
+                                <td>Rs. {{ "%.2f"|format(fs[4]) }}</td>
+                                <td>{{ fs[5] }}</td>
+                                <td>
+                                    <button class="btn-sm btn-danger" onclick="confirmDelete('/delete_fee_structure/{{ fs[0] }}', 'Delete this fee entry?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6">No fee structures found</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Fee Modal --> 
+            <div id="addFeeModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header"><h3>Add Fee Structure</h3><button class="close-modal" onclick="closeModal()">&times;</button></div>
+                    <form method="POST" action="/add_fee_structure">
+                        <div class="form-row">
+                            <div class="form-group"><label>Course</label><select name="course_id" required id="feeCourseSelect">{% for course in courses %}<option value="{{ course[0] }}">{{ course[1] }}</option>{% endfor %}</select></div>
+                            <div class="form-group"><label>Semester</label><select name="semester_id" required id="feeSemesterSelect">
+                                <option value="">Select Semester</option>
+                            </select></div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group"><label>Fee Head</label><select name="fee_head_id" required>{% for head in fee_heads %}<option value="{{ head[0] }}">{{ head[1] }}</option>{% endfor %}</select></div>
+                            <div class="form-group"><label>Amount</label><input type="number" name="amount" step="0.01" required></div>
+                        </div>
+                        <div class="form-group"><label>Due Date</label><input type="date" name="due_date"></div>
+                        <button type="submit" class="btn-primary">Add Fee</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <!-- ========== COLLECTION MODULE ========== -->
+            {% if module == 'collection' %}
+            <div class="collection-view">
+                <div class="page-header"><h1><i class="fas fa-hand-holding-usd"></i> Fee Collection</h1></div>
+
+                <div class="stats-grid" style="margin-bottom: 30px;">
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-content"><h3>Total Students</h3><p class="stat-value">{{ students|length }}</p></div></div>
+<p class="stat-value">Rs. {{ "%.2f"|format(settings.get('today_collection', 0)|float) }}</p>
+                </div>
+
+                <div class="section-title"><i class="fas fa-search"></i> Search Student</div>
+                <div class="search-bar">
+                    <input type="text" id="studentSearch" placeholder="Enter Student ID or Name" list="studentList">
+                    <datalist id="studentList">{% for s in students %}<option value="{{ s[0] }}">{{ s[1] }} ({{ s[0] }})</option>{% endfor %}</datalist>
+                    <button class="btn-primary" type="button" onclick="searchStudent()"><i class="fas fa-search"></i> Search</button>
+                </div>
+
+
+
+                <div id="studentFeeDetails" style="display:none; margin-top: 30px;">
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-content"><h3>Student Name</h3><p id="studentName" class="stat-value">-</p></div></div>
+                        <div class="stat-card"><div class="stat-content"><h3>Roll No</h3><p id="rollNo" class="stat-value">-</p></div></div>
+                        <div class="stat-card"><div class="stat-content"><h3>Course / Semester</h3><p id="courseSem" class="stat-value">-</p></div></div>
+                        <div class="stat-card"><div class="stat-content"><h3>Pending Amount</h3><p id="pendingAmount" class="stat-value text-danger">-</p></div></div>
+                    </div>
+                    
+                    <div class="data-table">
+                        <table>
+                            <thead><tr><th>Fee Head</th><th>Total Amount</th><th>Paid</th><th>Pending</th></tr></thead>
+                            <tbody id="feeHeadsTable"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 20px; background: var(--bg-card); border-radius: 16px;">
+                        <h3>Collect Payment</h3>
+
+                        <!-- Fee-head picker (dropdown + amount) -->
+                        <div class="form-row fee-head-picker">
+                            <div class="form-group">
+                                <label>Fee Head</label>
+                                <select id="feeHeadSelect">
+                                    <option value="">Select fee head</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" id="feeHeadAmount" step="0.01" min="0" placeholder="Enter amount" disabled>
+                            </div>
+                            <div class="form-group fee-head-add">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn-secondary" onclick="addFeeHeadToPayment()" id="addFeeHeadBtn" disabled>
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Selected fee heads list -->
+                        <div class="fee-selected-list" id="feeSelectedList">
+                            <div class="muted">Add one or more fee heads above.</div>
+                        </div>
+
+                        <div class="form-row" style="margin-top: 16px;">
+                            <div class="form-group">
+                                <label>Payment Mode</label>
+                                <select id="payMode">
+                                    <option value="Cash">💰 Cash</option>
+                                    <option value="Card">💳 Card</option>
+                                    <option value="Bank Transfer">🏦 Bank Transfer</option>
+                                    <option value="Online">📱 Online</option>
+                                    <option value="Cheque">📝 Cheque</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row" style="margin-top: 12px;">
+                            <div class="form-group" style="flex: 1 1 auto;">
+                                <label>Remarks</label>
+                                <input type="text" id="payRemarks" placeholder="Transaction ID / Cheque No / Remarks">
+                            </div>
+                        </div>
+
+                        <!-- hidden inputs only (backend expects arrays) -->
+                        <input type="hidden" name="fee_head_ids" id="hiddenFeeHeadIds" />
+                        <input type="hidden" name="fee_head_amounts" id="hiddenFeeHeadAmounts" />
+
+                        <button class="btn-primary" onclick="processPayment()"><i class="fas fa-check"></i> Collect Payment</button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ========== PAYMENT HISTORY MODULE ========== -->
+            {% if module == 'payment_history' %}
+            <div class="payment-history-view">
+                <div class="page-header"><h1><i class="fas fa-history"></i> Payment History</h1></div>
+
+                <div class="search-bar"><form method="GET" style="display: flex; gap: 10px; width: 100%;">
+                    <select name="student_id"><option value="">All Students</option>{% for s in students %}<option value="{{ s[0] }}" {% if student_id == s[0] %}selected{% endif %}>{{ s[1] }}</option>{% endfor %}</select>
+                    <input type="date" name="from_date" value="{{ from_date }}" placeholder="From Date">
+                    <input type="date" name="to_date" value="{{ to_date }}" placeholder="To Date">
+                    <button type="submit" class="btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                </form></div>
+
+                <div class="data-table"><table><thead><tr><th>Receipt No</th><th>Student Name</th><th>Amount</th><th>Date</th><th>Mode</th><th>Actions</th></tr></thead>
+<tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment[6] or 'N/A' }}</td>
+                                <td>{{ payment[1] }}</td>
+                                <td>Rs. {{ "%.2f"|format(payment[3]) }}</td>
+                                <td>{{ payment[4] }}</td>
+                                <td>{{ payment[5] }}</td>
+                                <td>
+                                    <a href="/receipt/{{ payment[0] }}" class="btn-sm btn-primary">View Receipt</a>
+                                    <a href="/download_receipt_pdf/{{ payment[0] }}" class="btn-sm btn-secondary">PDF</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6">No payments found</td></tr>
+                            {% endfor %}
+                        </tbody>
+            </div>
+            {% endif %}
+
+            <!-- ========== DEFAULTERS MODULE ========== -->
+            {% if module == 'defaulters' %}
+            <div class="defaulters-view">
+                <div class="page-header"><h1><i class="fas fa-exclamation-triangle"></i> Fee Defaulters</h1><button class="btn-primary" onclick="sendBulkReminder()"><i class="fas fa-envelope"></i> Send Bulk Reminders</button></div>
+
+                <div class="data-table"><table><thead><tr><th>Student Name</th><th>Student ID</th><th>Roll No</th><th>Parent Phone</th><th>Due Amount</th><th>Late Fee</th><th>Days Overdue</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for d in defaulters %}
+                    <tr>
+                        <td>{{ d[0] }}</td>
+                        <td>{{ d[1] }}</td>
+                        <td>{{ d[2] }}</td>
+                        <td>{{ d[3] }}</td>
+                        <td>Rs. {{ "%.2f"|format(d[5]) }}</td>
+                        <td>Rs. {{ "%.2f"|format(d[6]) }}</td>
+                        <td>{{ d[7] }}</td>
+                        <td><button class="btn-sm btn-warning" onclick="sendReminder('{{ d[1] }}')"><i class="fas fa-bell"></i> Remind</button></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="8">No defaulters found</td></tr>
+                    {% endfor %}
+                </tbody></table></div>
+            </div>
+            {% endif %}
+
+            <!-- ========== REPORTS MODULE ========== -->
+            {% if module == 'reports' %}
+            <div class="reports-view">
+                <div class="page-header"><h1><i class="fas fa-chart-bar"></i> Financial Reports</h1></div>
+
+                <div class="search-bar"><form method="GET" style="display: flex; gap: 10px;">
+                    <button name="type" value="daily" class="btn-{% if report_type == 'daily' %}primary{% else %}secondary{% endif %}">Daily</button>
+                    <button name="type" value="monthly" class="btn-{% if report_type == 'monthly' %}primary{% else %}secondary{% endif %}">Monthly</button>
+                    <button name="type" value="yearly" class="btn-{% if report_type == 'yearly' %}primary{% else %}secondary{% endif %}">Yearly</button>
+                </form></div>
+
+                <div class="data-table" style="margin-top: 20px;"><table><thead><tr><th>Period</th><th>Transactions</th><th>Total Amount</th></tr></thead>
+<td>Rs. {{ "%.2f"|format(row[2]) }}</td>
+
+                <div class="section-title" style="margin-top: 30px;"><i class="fas fa-chart-pie"></i> Course-wise Collection</div>
+                <div class="data-table"><table><thead><tr><th>Course</th><th>Total Collection</th></tr></thead>
+<td>{{ cw[0] }}</td><td>Rs. {{ "%.2f"|format(cw[1]) }}</td>
+
+                <div style="margin-top: 30px; text-align: right;"><a href="/export_report/{{ report_type }}/excel" class="btn-primary">Export to Excel</a> <a href="/export_report/{{ report_type }}/csv" class="btn-secondary">Export to CSV</a></div>
+            </div>
+            {% endif %}
+
+            <!-- ========== ADVANCED ANALYTICS MODULE ========== -->
+            {% if module == 'advanced' %}
+            <div class="advanced-view">
+                <div class="page-header"><h1><i class="fas fa-bolt"></i> Advanced Analytics</h1></div>
+
+                <div class="stats-grid" style="margin-bottom: 30px;">
+<p class="stat-value">Rs. {{ "%.2f"|format(total_collection) }}</p>
+<p class="stat-value">Rs. {{ "%.2f"|format(avg_payment) }}</p>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-receipt"></i></div><div class="stat-content"><h3>Total Transactions</h3><p class="stat-value">{{ total_transactions }}</p></div></div>
+                </div>
+
+                <div class="section-title"><i class="fas fa-layer-group"></i> Enrollment by Course</div>
+                <div class="data-table"><table><thead><tr><th>Course</th><th>Enrolled Students</th></tr></thead><tbody>{% for row in enrollment_by_course %}<tr><td>{{ row[0] }}</td><td>{{ row[1] }}</td></tr>{% else %}<tr><td colspan="2">No enrollment data available</td></tr>{% endfor %}</tbody></table></div>
+
+                <div class="section-title"><i class="fas fa-dollar-sign"></i> Collection by Course</div>
+<td>{{ row[0] }}</td><td>Rs. {{ "%.2f"|format(row[1]) }}</td></tr>
+
+                <div class="section-title"><i class="fas fa-chart-pie"></i> Payment Mode Breakdown</div>
+<td>Rs. {{ "%.2f"|format(row[1]) }}</td><td>{{ row[2] }}</td>
+
+                <div class="section-title"><i class="fas fa-user-clock"></i> Top Defaulters</div>
+<td>Rs. {{ "%.2f"|format(d[3]) }}</td>
+            </div>
+            {% endif %}
+
+            <!-- ========== EXPENSES MODULE ========== -->
+            {% if module == 'expenses' %}
+            <div class="expenses-view">
+                    <div class="page-header">
+                        <h1><i class="fas fa-money-bill-wave"></i> Expense Management</h1>
+                        <button class="btn-primary" onclick="openModal('addExpenseModal')"><i class="fas fa-plus"></i> Add Expense</button>
+                    </div>
+
+                <div class="stats-grid" style="margin-bottom: 20px;">
+<p class="stat-value">Rs. {{ "%.2f"|format(category_totals|sum(attribute=1)|default(0)) }}</p>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Entered By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exp in expenses %}
+                            <tr>
+                                <td>{{ exp[1] }}</td>
+                                <td>Rs. {{ "%.2f"|format(exp[2]) }}</td>
+                                <td>{{ exp[3] }}</td>
+                                <td>{{ exp[4] }}</td>
+                                <td>{{ exp[5] }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5">No expenses found</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            <div id="addExpenseModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Add Expense</h3><button class="close-modal" onclick="closeModal()">&times;</button></div>
+            <form method="POST" action="/add_expense"><div class="form-row"><div class="form-group"><label>Category</label><input type="text" name="category" required></div><div class="form-group"><label>Amount</label><input type="number" name="amount" step="0.01" required></div></div>
+            <div class="form-row"><div class="form-group"><label>Date</label><input type="date" name="expense_date" required></div><div class="form-group"><label>Description</label><input type="text" name="description"></div></div>
+            <button type="submit" class="btn-primary">Add Expense</button></form></div></div>
+            {% endif %}
+
+            <!-- ========== COURSES MODULE ========== -->
+            {% if module == 'courses' %}
+            <div class="courses-view">
+                <div class="page-header"><h1><i class="fas fa-book"></i> Course Management</h1><button class="btn-primary" onclick="openModal('addCourseModal')"><i class="fas fa-plus"></i> Add Course</button></div>
+
+                <div class="data-table"><table><thead><tr><th>Course Name</th><th>Course Code</th><th>Duration</th><th>Semesters</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>{% for c in courses %}<tr><td>{{ c[1] }}</td><td>{{ c[2] }}</td><td>{{ c[3] }} years</td><td>{{ c[3]*2 }}</td><td>{% if c[4] %}<span class="badge-success">Active</span>{% else %}<span class="badge-danger">Inactive</span>{% endif %}</td>
+                <td><button class="btn-sm btn-warning" onclick="editCourse({{ c[0] }})">Edit</button></td></tr>{% else %}<tr><td colspan="6">No courses found</td></tr>{% endfor %}</tbody></table></div>
+            </div>
+
+            <div id="addCourseModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Add Course</h3><button class="close-modal" onclick="closeModal()">&times;</button></div>
+            <form method="POST" action="/add_course"><div class="form-row"><div class="form-group"><label>Course Name</label><input type="text" name="course_name" required></div><div class="form-group"><label>Course Code</label><input type="text" name="course_code" required></div></div>
+            <div class="form-group"><label>Duration (Years)</label><input type="number" name="duration_years" value="3" required></div>
+            <button type="submit" class="btn-primary">Add Course</button></form></div></div>
+
+            <div id="editCourseModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Edit Course</h3><button class="close-modal" onclick="closeModal()">&times;</button></div>
+            <form id="editCourseForm" method="POST"><div class="form-row"><div class="form-group"><label>Course Name</label><input type="text" name="course_name" id="editCourseName" required></div><div class="form-group"><label>Course Code</label><input type="text" name="course_code" id="editCourseCode" required></div></div>
+            <div class="form-row"><div class="form-group"><label>Duration (Years)</label><input type="number" name="duration_years" id="editCourseDuration" required></div><div class="form-group"><label>Status</label><select name="is_active" id="editCourseActive"><option value="1">Active</option><option value="0">Inactive</option></select></div></div>
+            <button type="submit" class="btn-primary">Save Course</button></form></div></div>
+            {% endif %}
+
+            <!-- ========== USERS MODULE (Admin Only) ========== -->
+            {% if module == 'users' and role == 'super_admin' %}
+            <div class="users-view">
+                <div class="page-header"><h1><i class="fas fa-user-cog"></i> User Management</h1><button class="btn-primary" onclick="openModal('addUserModal')"><i class="fas fa-plus"></i> Add User</button></div>
+
+                <div class="data-table"><table><thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+                <tbody>{% for u in users %}<tr><td>{{ u[1] }}</td><td>{{ u[2] }}</td><td><span class="badge-info">{{ u[3] }}</span></td><td>{% if u[4] %}<span class="badge-success">Active</span>{% else %}<span class="badge-danger">Inactive</span>{% endif %}</td><td>{{ u[5] }}</td>
+                <td><button class="btn-sm btn-warning" onclick="editUser({{ u[0] }})">Edit</button> <button class="btn-sm btn-danger" onclick="confirmDelete('/delete_user/{{ u[0] }}', 'Deactivate this user?')">Delete</button></td></tr>{% else %}<tr><td colspan="6">No users found</td></tr>{% endfor %}</tbody></table></div>
+            </div>
+
+            <div id="addUserModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Add User</h3><button class="close-modal" onclick="closeModal()">&times;</button></div>
+            <form id="addUserForm" method="POST" action="/add_user" enctype="multipart/form-data"><div class="form-row"><div class="form-group"><label>Username</label><input type="text" name="username" required></div><div class="form-group"><label>Password</label><input type="password" name="password" required></div></div>
+            <div class="form-row"><div class="form-group"><label>Email</label><input type="email" name="email"></div><div class="form-group"><label>Role</label><select name="role"><option value="admin">Admin</option><option value="accountant">Accountant</option><option value="student">Student</option><option value="parent">Parent</option></select></div></div>
+            <div class="form-row"><div class="form-group"><label>Profile Image</label><input type="file" name="user_image" id="addUserImage" accept="image/*"></div></div>
+            <button type="submit" class="btn-primary">Add User</button></form></div></div>
+
+
+            <div id="editUserModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Edit User</h3><button class="close-modal" onclick="closeModal()">&times;</button></div>
+            <form id="editUserForm" method="POST" enctype="multipart/form-data"><div class="form-row"><div class="form-group"><label>Username</label><input type="text" name="username" id="editUsername" required></div><div class="form-group"><label>Password</label><input type="password" name="password" id="editUserPassword" placeholder="Leave blank to keep current password"></div></div>
+            <div class="form-row"><div class="form-group"><label>Email</label><input type="email" name="email" id="editUserEmail"></div><div class="form-group"><label>Role</label><select name="role" id="editUserRole"><option value="admin">Admin</option><option value="accountant">Accountant</option><option value="student">Student</option><option value="parent">Parent</option></select></div></div>
+            <div class="form-row"><div class="form-group"><label>Status</label><select name="is_active" id="editUserActive"><option value="1">Active</option><option value="0">Inactive</option></select></div></div>
+            <div class="form-row"><div class="form-group"><label>Profile Image</label><input type="file" name="user_image" id="editUserImage" accept="image/*"></div></div>
+            <div class="form-row"><div class="form-group"><button type="button" class="btn-secondary" onclick="uploadEditedUserImage()"><i class="fas fa-image"></i> Upload Image</button></div></div>
+            <button type="submit" class="btn-primary">Save User</button></form></div></div>
+
+
+            {% endif %}
+
+            <!-- ========== SETTINGS MODULE ========== -->
+            {% if module == 'settings' %}
+            <div class="settings-view">
+                <div class="page-header"><h1><i class="fas fa-cog"></i> System Settings</h1></div>
+
+                <div class="settings-container">
+                    <div class="settings-section"><h3>🎨 Appearance</h3><div class="setting-item"><label>Theme Mode</label><select onchange="updateSetting('theme', this.value)"><option value="light" {% if settings.get('theme','light')=='light' %}selected{% endif %}>Light</option><option value="dark" {% if settings.get('theme')=='dark' %}selected{% endif %}>Dark</option></select></div></div>
+                    
+                    <div class="settings-section"><h3>🏫 College Details</h3><div class="setting-item"><label>College Name</label><input type="text" value="{{ settings.get('college_name', '') }}" onchange="updateSetting('college_name', this.value)"></div>
+                    <div class="setting-item"><label>College Address</label><input type="text" value="{{ settings.get('college_address', '') }}" onchange="updateSetting('college_address', this.value)"></div>
+                    <div class="setting-item"><label>College Phone</label><input type="text" value="{{ settings.get('college_phone', '') }}" onchange="updateSetting('college_phone', this.value)"></div>
+                    <div class="setting-item"><label>College Email</label><input type="email" value="{{ settings.get('college_email', '') }}" onchange="updateSetting('college_email', this.value)"></div></div>
+
+                    <div class="settings-section"><h3>💰 Fee Rules</h3><div class="setting-item"><label>Academic Year</label><input type="text" value="{{ settings.get('academic_year', '2024-2025') }}" onchange="updateSetting('academic_year', this.value)"></div>
+                    <div class="setting-item"><label>Late Fee Percentage</label><input type="number" value="{{ settings.get('late_fee_percentage', '5') }}" onchange="updateSetting('late_fee_percentage', this.value)"> % per month</div>
+                    <div class="setting-item"><label>Grace Period</label><input type="number" value="{{ settings.get('grace_period_days', '15') }}" onchange="updateSetting('grace_period_days', this.value)"> days</div>
+                    <div class="setting-item"><label>GST Percentage</label><input type="number" value="{{ settings.get('gst_percentage', '18') }}" onchange="updateSetting('gst_percentage', this.value)"> %</div></div>
+
+                    <div class="settings-section"><h3>⌨️ Shortcuts</h3><div class="shortcuts-list"><p><kbd>Ctrl</kbd> + <kbd>S</kbd> = Students</p><p><kbd>Ctrl</kbd> + <kbd>C</kbd> = Collection</p><p><kbd>Ctrl</kbd> + <kbd>R</kbd> = Reports</p></div></div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='ui.js') }}"></script>
+    <script>
+        // Collection-module-only JS (kept here to avoid breaking backend-driven navigation)
+        let currentStudentId = null;
+
+        // Fee Structure: generate semester dropdown based on COURSE DURATION (FRONTEND ONLY)
+
+        // Requirement mapping:
+        // - 3 years => 6 semesters (1..6)
+        // - 2 years => 4 semesters (1..4)
+
+        function getDurationYearsForCourseName(courseName) {
+            const normalized = (courseName || '').trim().toLowerCase();
+            // Adjust keys here if your course names differ
+            if (normalized.includes('bcs')) return 3;
+            if (normalized.includes('bba')) return 3;
+            if (normalized.includes('mca')) return 2;
+            return null;
+        }
+
+        function buildSemesterOptions(semesterSelect, semestersCount) {
+            semesterSelect.innerHTML = '';
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Select Semester';
+            semesterSelect.appendChild(placeholder);
+
+            for (let i = 1; i <= semestersCount; i++) {
+                const opt = document.createElement('option');
+                // IMPORTANT: frontend-generated value; backend currently expects semester_id
+                // This meets your request to NOT use/insert semesters DB rows.
+                opt.value = String(i);
+                opt.textContent = `Semester ${i}`;
+                semesterSelect.appendChild(opt);
+            }
+        }
+              function getDurationYearsForCourseName(courseName) {
+    const normalized = (courseName || '').trim().toLowerCase();
+    
+    // Check for BCS (Bachelor of Computer Science)
+    if (normalized.includes('bcs') || normalized.includes('bachelor of computer science')) return 3;
+    
+    // Check for BBA
+    if (normalized.includes('bba') || normalized.includes('bachelor of business administration')) return 3;
+    
+    // Check for MCA
+    if (normalized.includes('mca') || normalized.includes('master of computer applications')) return 2;
+    
+    return null;
+}
+
+        function refreshFeeSemestersFrontendOnly() {
+            const feeCourseSelect = document.getElementById('feeCourseSelect');
+            const feeSemesterSelect = document.getElementById('feeSemesterSelect');
+            if (!feeCourseSelect || !feeSemesterSelect) return;
+
+            // Reset + disable during calculation
+            feeSemesterSelect.disabled = true;
+
+            // If no course selected
+            if (!feeCourseSelect.value) {
+                feeSemesterSelect.innerHTML = '<option value="">Select Semester</option>';
+                feeSemesterSelect.disabled = false;
+                return;
+            }
+
+            const courseOption = feeCourseSelect.options[feeCourseSelect.selectedIndex];
+            const courseName = courseOption ? courseOption.textContent : '';
+            const years = getDurationYearsForCourseName(courseName);
+
+            if (!years) {
+                feeSemesterSelect.innerHTML = '<option value="">No semesters available</option>';
+                feeSemesterSelect.disabled = false;
+                showToast('Unable to determine duration for selected course (update JS mapping).', 'warning');
+                return;
+            }
+
+            const semestersCount = years * 2;
+            buildSemesterOptions(feeSemesterSelect, semestersCount);
+            feeSemesterSelect.disabled = false;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const feeCourseSelect = document.getElementById('feeCourseSelect');
+            if (!feeCourseSelect) return;
+
+            refreshFeeSemestersFrontendOnly();
+            feeCourseSelect.addEventListener('change', refreshFeeSemestersFrontendOnly);
+        });
+
+        // Attach event handlers ONLY in the fee_structure modal (prevent affecting other pages)
+        // (Intentionally empty - kept to avoid missing commas/brace syntax errors.)
+
+
+
+
+
+
+
+        
+
+        
+        function searchStudent() {
+            const studentId = document.getElementById('studentSearch').value;
+            if (!studentId) { showToast('Please enter student ID', 'warning'); return; }
+
+            // Clear previously selected fee heads
+            window.__selectedFeeHeads = [];
+
+
+            fetch(`/get_student_fees/${studentId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) { showToast(data.error || 'Error loading fee details', 'error'); return; }
+
+                    currentStudentId = studentId;
+                    document.getElementById('studentName').innerText = data.student_name;
+                    document.getElementById('rollNo').innerText = data.roll_no;
+                    document.getElementById('courseSem').innerText = `${data.course} - ${data.semester}`;
+document.getElementById('pendingAmount').innerText = `Rs. ${data.pending_amount.toFixed(2)}`;
+
+                    // Reset dropdown + selected list
+                    window.__selectedFeeHeads = [];
+                    const feeHeadSelect = document.getElementById('feeHeadSelect');
+                    const feeHeadAmount = document.getElementById('feeHeadAmount');
+                    const addBtn = document.getElementById('addFeeHeadBtn');
+                    const selectedList = document.getElementById('feeSelectedList');
+
+                    if (feeHeadSelect) {
+                        feeHeadSelect.innerHTML = '<option value="">Select fee head</option>';
+                    }
+                    if (feeHeadAmount) {
+                        feeHeadAmount.value = '';
+                        feeHeadAmount.disabled = true;
+                    }
+                    if (addBtn) {
+                        addBtn.disabled = true;
+                    }
+                    if (selectedList) {
+                        selectedList.innerHTML = '<div class="muted">Add one or more fee heads above.</div>';
+                    }
+
+                    // Populate fee table + dropdown
+                    let html = '';
+                    for (let head of data.fee_heads) {
+                        const pending = Math.max(0, head.pending_amount);
+                        html += `
+                            <tr>
+                                <td>${head.head_name}</td>
+                                <td>Rs. ${head.head_total.toFixed(2)}</td>
+                                <td>Rs. ${head.paid_amount.toFixed(2)}</td>
+                                <td class="text-danger">Rs. ${pending.toFixed(2)}</td>
+                            </tr>
+                        `;
+
+                        if (feeHeadSelect) {
+                            const opt = document.createElement('option');
+                            opt.value = head.fee_head_id;
+                            opt.textContent = `${head.head_name} (Pending: Rs. ${pending.toFixed(2)})`;
+                            opt.dataset.pending = pending;
+                            feeHeadSelect.appendChild(opt);
+                        }
+                    }
+
+                    document.getElementById('feeHeadsTable').innerHTML = html;
+                    document.getElementById('studentFeeDetails').style.display = 'block';
+
+                    // Enable dropdown interactions
+                    if (feeHeadSelect && feeHeadAmount && addBtn) {
+                        feeHeadSelect.disabled = false;
+
+                        feeHeadSelect.onchange = () => {
+                            const selectedOpt = feeHeadSelect.options[feeHeadSelect.selectedIndex];
+                            const pending = parseFloat(selectedOpt?.dataset?.pending || '0');
+
+                            feeHeadAmount.disabled = !feeHeadSelect.value;
+                            addBtn.disabled = !feeHeadSelect.value;
+
+                            // Prefill with pending amount for better UX
+                            if (feeHeadSelect.value) {
+                                feeHeadAmount.value = isNaN(pending) ? '' : pending.toFixed(2);
+                            } else {
+                                feeHeadAmount.value = '';
+                            }
+                        };
+                    }
+                })
+                .catch(() => showToast('Failed to load fee details', 'error'));
+        }
+
+        function addFeeHeadToPayment() {
+            const feeHeadSelect = document.getElementById('feeHeadSelect');
+            const feeHeadAmount = document.getElementById('feeHeadAmount');
+            const selectedList = document.getElementById('feeSelectedList');
+
+            if (!feeHeadSelect || !feeHeadAmount || !selectedList) return;
+            if (!feeHeadSelect.value) { showToast('Select a fee head', 'warning'); return; }
+
+            const feeHeadId = feeHeadSelect.value;
+            const amount = parseFloat(feeHeadAmount.value || '0');
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Enter valid amount for selected fee head', 'warning');
+                return;
+            }
+
+            const opt = feeHeadSelect.options[feeHeadSelect.selectedIndex];
+            const headName = (opt && opt.textContent) ? opt.textContent.replace(/\s*\(Pending:.*\)$/, '') : feeHeadId;
+
+            window.__selectedFeeHeads = window.__selectedFeeHeads || [];
+
+            // If same head exists, replace amount
+            const existingIdx = window.__selectedFeeHeads.findIndex(x => String(x.fee_head_id) === String(feeHeadId));
+            if (existingIdx >= 0) {
+                window.__selectedFeeHeads[existingIdx].amount = amount;
+                window.__selectedFeeHeads[existingIdx].name = headName;
+            } else {
+                window.__selectedFeeHeads.push({ fee_head_id: feeHeadId, amount, name: headName });
+            }
+
+            // Render list
+            const rows = window.__selectedFeeHeads
+                .map((x, idx) => {
+                    const formatted = x.amount.toFixed(2);
+                    return `
+                        <div class="fee-selected-item" data-idx="${idx}">
+                            <div class="fee-selected-name">${x.name}</div>
+                            <div class="fee-selected-amount">Rs. ${formatted}</div>
+                            <button type="button" class="btn-sm btn-danger" onclick="removeSelectedFeeHead(${idx})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            selectedList.innerHTML = `
+                <div class="fee-selected-items">${rows}</div>
+            `;
+        }
+
+        function removeSelectedFeeHead(idx) {
+            window.__selectedFeeHeads = window.__selectedFeeHeads || [];
+            window.__selectedFeeHeads = window.__selectedFeeHeads.filter((_, i) => i !== idx);
+            // Re-render by re-adding current state
+            addFeeHeadToPayment();
+        }
+
+        function processPayment() {
+            if (!currentStudentId) { showToast('Please search a student first', 'warning'); return; }
+
+            const paymentMode = document.getElementById('payMode').value;
+            const remarks = document.getElementById('payRemarks').value;
+
+            const selected = window.__selectedFeeHeads || [];
+            if (selected.length === 0) { showToast('Add at least one fee head to payment', 'warning'); return; }
+
+            const feeHeadIds = selected.map(x => x.fee_head_id);
+            const feeHeadAmounts = selected.map(x => x.amount);
+            const computedTotal = feeHeadAmounts.reduce((a, b) => a + (parseFloat(b) || 0), 0);
+
+            if (!computedTotal || computedTotal <= 0) { showToast('Payment amount must be > 0', 'warning'); return; }
+
+            const params = new URLSearchParams();
+            params.append('student_id', currentStudentId);
+            params.append('amount', computedTotal);
+            params.append('payment_mode', paymentMode);
+            params.append('remarks', remarks);
+
+            for (let i = 0; i < feeHeadIds.length; i++) {
+                params.append('fee_head_ids[]', feeHeadIds[i]);
+                params.append('fee_head_amounts[]', feeHeadAmounts[i].toFixed(2));
+            }
+
+            fetch('/collect_fee', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(`Payment successful! Receipt: ${data.receipt_no}`, 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showToast(data.error || 'Payment failed', 'error');
+                }
+            })
+            .catch(() => showToast('Payment failed', 'error'));
+        }
+
+
+    </script>
+    <script>
+        // Sidebar theme button label sync
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeBtn = document.getElementById('theme-toggle');
+            if (!themeBtn) return;
+            const updateLabel = () => {
+                const isDark = document.body.getAttribute('data-theme') === 'dark';
+                themeBtn.innerHTML = `<i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i> <span>${isDark ? 'Light' : 'Dark'}</span>`;
+            };
+            updateLabel();
+            themeBtn.addEventListener('click', () => setTimeout(updateLabel, 200));
+        });
+    </script>
+</body>
+</html>
